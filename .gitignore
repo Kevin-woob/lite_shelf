@@ -1,3 +1,6 @@
 # Apps folder
 apps/
 !apps/app-tutorial/
+
+# IDE folder
+.trae/
