@@ -136,6 +136,14 @@ async function sendNotification(apiKey, message, targetUserId = null, data = nul
 }
 ```
 
+**Example Response (201 Created):**
+```json
+{
+    "success": true,
+    "id": 9
+}
+```
+
 ### 6.3 Mark Notification as Read
 
 **Endpoint:** `POST your_site/notifications/{id}/read`

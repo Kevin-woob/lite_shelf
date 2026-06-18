@@ -1,48 +1,39 @@
 # Lite_Shelf
 
-> **Your own lightweight Backend-as-a-Service — in a single PHP/MySQL stack.**
+> **AI-native backend platform — auto-provision isolated BaaS instances for every app your agent builds.**
 
-Lite_Shelf is a self-hosted, multi-tenant application platform that gives every app its own isolated database, file storage, authentication, cloud functions, and fine-grained access control — all provisioned with a single API call. Think of it as a **lightweight, open-source backend platform**, running entirely on PHP 8.x and MySQL.
-
----
-
-## Why Lite_Shelf?
-
-Building backends for multiple projects usually means managing separate servers, databases, and auth systems. Lite_Shelf solves this with a **two-tier architecture** that puts you in full control:
-
-- **Superadmin Dashboard** — provision and manage unlimited app instances from one place. Each app gets an auto-generated API key, a dedicated database (with isolated table prefixes), and its own file structure.
-- **Per-App API** — every app instance ships with a complete BaaS feature set: document collections, file storage with folder management, push-style notifications, serverless cloud functions, and role-based access control — all accessible via a clean REST API.
-
-No vendor lock-in. No monthly fees. No black boxes. Just clean, auditable PHP code you can deploy anywhere.
+Lite_Shelf is a self-hosted backend-as-a-service designed for AI-assisted development. One API call gives your LLM agent a complete, isolated backend — document collections, file storage, authentication, cloud functions, and access control. No scaffolding. No rebuilding CRUD. Just hand the API docs to your agent and let it focus on shipping.
 
 ---
 
-## The AI Developer Advantage
+## The Problem
 
-**Set up your backend once. Let your LLM build every app after that.**
+Every time your AI agent starts a new app, it wastes context on backend setup: creating auth flows, writing CRUD endpoints, managing databases, configuring storage. All of it is boilerplate. All of it distracts from the actual product.
 
-Here's the workflow that changes everything:
+Lite_Shelf eliminates that overhead entirely.
 
-1. **Deploy Lite_Shelf** — one-time setup. You now have a fully working backend-as-a-service.
-2. **Create a new app** — one API call provisions a fresh database, storage, and auth system.
-3. **Feed the API reference to your LLM agent** — give it the tutorial files. That's it.
-4. **Your LLM builds the app** — mobile app, web app, desktop software, whatever — with zero backend rebuilds.
+## How It Works
 
-Every new project gets a ready-made backend with collections, storage, notifications, cloud functions, and access control. No scaffolding. No rewriting CRUD. No "let me set up auth again." Just hand your LLM the API docs and let it focus on the product.
+You deploy Lite_Shelf **once**. From then on, every new app your agent builds gets its own ready-made backend:
 
-**You're not building backends anymore. You're shipping products.**
+1. **Deploy Lite_Shelf** — one-time setup on any PHP/MySQL server.
+2. **Create a new app** — one API call provisions an isolated database, file storage, auth system, and API key.
+3. **Give the API docs to your LLM agent** — paste the tutorial or quick reference into your agent's context.
+4. **Your agent ships the frontend** — mobile app, web app, desktop software — with zero backend setup required.
+
+Your agent never writes backend boilerplate again. It just calls the API and builds.
 
 ---
 
-## Architecture at a Glance
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────┐
 │              Superadmin Dashboard               │
 │  /dashboard/api.php                              │
 │  ┌───────────────────────────────────────────┐  │
-│  │  Create / List / Update / Delete Apps     │  │
-│  │  Auto-provision: DB tables + folders + key│  │
+│  │  Provision / Manage App Instances         │  │
+│  │  Auto-generate: DB + storage + API key    │  │
 │  │  Aggregate stats & monitoring             │  │
 │  └───────────────────────────────────────────┘  │
 └──────────────────────┬──────────────────────────┘
@@ -61,6 +52,8 @@ Every new project gets a ready-made backend with collections, storage, notificat
      │ files/ │   │ files/ │   │ files/ │
      └────────┘   └────────┘   └────────┘
 ```
+
+Your agent interacts with any app instance via REST API — no backend code needed.
 
 ---
 
