@@ -9,7 +9,7 @@ ADMIN_API = f"{BASE_URL}/admin/api.php"
 MAIN_API = f"{BASE_URL}/index.php"
 FUNCTIONS_API = f"{BASE_URL}/functions/index.php"
 
-ADMIN_API_KEY = "app_15b2daba18cb2b1f5ae8d0d6a3f79c61159e649a81f9d778ea8533749d11c1ee"
+ADMIN_API_KEY = "aba0807181d7b1251c8b41450b019dd3e0ffca897e88b6d6e31e51e901acecc1"
 
 results = {}
 ts = datetime.datetime.now().strftime("%H%M%S") + f"{random.randint(100,999)}"

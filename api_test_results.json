@@ -28,20 +28,21 @@
     },
     "response": {
       "success": true,
-      "valid": false,
-      "is_admin": false
+      "valid": true,
+      "is_admin": true,
+      "name": "Test Admin Key"
     }
   },
   "admin_login": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/login",
-    "status_code": 401,
+    "status_code": 200,
     "method": "POST",
     "request_data": {
       "api_key": "***"
     },
     "response": {
-      "success": false,
-      "message": "Invalid admin key"
+      "success": true,
+      "name": "Test Admin Key"
     }
   },
   "admin_session-key": {
@@ -51,365 +52,834 @@
     "request_data": null,
     "response": {
       "success": true,
-      "has_key": false
+      "has_key": true
     }
   },
   "admin_stats": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/stats",
-    "status_code": 401,
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "stats": {
+        "total_users": 2,
+        "active_api_keys": 9,
+        "total_files": 22,
+        "total_collections": 12,
+        "total_documents": 16
       }
     }
   },
   "admin_list-users": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/users",
-    "status_code": 401,
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "users": [
+        {
+          "id": 5,
+          "uid": "user_6a313a77b7e266.36049694",
+          "email": "testuser@example.com",
+          "email_verified": 0,
+          "display_name": "Test User",
+          "created_at": "2026-06-16 19:58:47",
+          "is_active": 1
+        },
+        {
+          "id": 2,
+          "uid": "user_6a30d4b67b2a95.09268156",
+          "email": "manager@asd.com",
+          "email_verified": 0,
+          "display_name": "asd",
+          "created_at": "2026-06-16 12:44:38",
+          "is_active": 1
+        }
+      ]
     }
   },
   "admin_create-user": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/users",
-    "status_code": 401,
+    "status_code": 201,
     "method": "POST",
     "request_data": {
-      "email": "testuser_142040879@example.com"
+      "email": "testuser_142319945@example.com"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "user": {
+        "uid": "user_6a338ed8077eb8.28161949",
+        "email": "testuser_142319945@example.com",
+        "display_name": "Test User",
+        "is_active": 1,
+        "id": 12
       }
     }
   },
   "admin_list-api-keys": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/api-keys",
-    "status_code": 401,
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "api_keys": [
+        {
+          "id": 23,
+          "name": "Test Admin Key",
+          "created_at": "2026-06-18 14:22:58",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 1,
+          "is_initial": 0
+        },
+        {
+          "id": 22,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:24:38",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 21,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:24:37",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 20,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:24:13",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 19,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:24:12",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 17,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:22:12",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 18,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:22:12",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 15,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:20:23",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 16,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:20:23",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 13,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:19:29",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 14,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:19:29",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 11,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:18:51",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 12,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:18:51",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 9,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 20:14:42",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 10,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 20:14:42",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 8,
+          "name": "Access Control Test Key",
+          "created_at": "2026-06-16 19:58:48",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 7,
+          "name": "Test API Key",
+          "created_at": "2026-06-16 19:58:47",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 6,
+          "name": "sda",
+          "created_at": "2026-06-16 12:48:54",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 5,
+          "name": "dddddd",
+          "created_at": "2026-06-16 12:45:44",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 4,
+          "name": "ssssssss",
+          "created_at": "2026-06-16 12:44:12",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 3,
+          "name": "first key",
+          "created_at": "2026-06-14 08:35:07",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 0,
+          "is_initial": 0
+        },
+        {
+          "id": 2,
+          "name": "first key",
+          "created_at": "2026-06-14 08:34:14",
+          "expires_at": null,
+          "is_active": 0,
+          "is_admin": 1,
+          "is_initial": 0
+        },
+        {
+          "id": 1,
+          "name": "Initial Admin Key",
+          "created_at": "2026-06-14 08:32:29",
+          "expires_at": null,
+          "is_active": 1,
+          "is_admin": 1,
+          "is_initial": 1
+        }
+      ]
     }
   },
   "admin_create-api-key": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/api-keys",
-    "status_code": 401,
+    "status_code": 201,
     "method": "POST",
     "request_data": {
       "name": "Test Key"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "key": {
+        "id": 24,
+        "key": "ad4245a5b103db4c52132fe882b4e0751bd904761ffb426d0318e585a131e231",
+        "key_hash": "942caf9f6b186ee451e1482414a963a5dc83892540f27165dc9ec016d09d3c95",
+        "is_admin": false,
+        "created_at": "2026-06-18 06:23:20"
       }
     }
   },
   "admin_list-collections": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections",
-    "status_code": 401,
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "collections": [
+        {
+          "id": 14,
+          "name": "ac_test_201851",
+          "description": null,
+          "created_at": "2026-06-16 20:18:51",
+          "document_count": 0
+        },
+        {
+          "id": 17,
+          "name": "ac_test_201929",
+          "description": null,
+          "created_at": "2026-06-16 20:19:29",
+          "document_count": 0
+        },
+        {
+          "id": 20,
+          "name": "ac_test_202023",
+          "description": null,
+          "created_at": "2026-06-16 20:20:23",
+          "document_count": 0
+        },
+        {
+          "id": 23,
+          "name": "ac_test_202212",
+          "description": null,
+          "created_at": "2026-06-16 20:22:12",
+          "document_count": 0
+        },
+        {
+          "id": 26,
+          "name": "ac_test_202413",
+          "description": null,
+          "created_at": "2026-06-16 20:24:13",
+          "document_count": 0
+        },
+        {
+          "id": 29,
+          "name": "ac_test_202438",
+          "description": null,
+          "created_at": "2026-06-16 20:24:38",
+          "document_count": 0
+        },
+        {
+          "id": 1,
+          "name": "asd",
+          "description": null,
+          "created_at": "2026-06-14 08:33:19",
+          "document_count": 1
+        },
+        {
+          "id": 2,
+          "name": "second_one",
+          "description": null,
+          "created_at": "2026-06-16 12:32:14",
+          "document_count": 1
+        },
+        {
+          "id": 4,
+          "name": "test_collection",
+          "description": null,
+          "created_at": "2026-06-16 14:11:21",
+          "document_count": 2
+        },
+        {
+          "id": 5,
+          "name": "test_collection_copy",
+          "description": null,
+          "created_at": "2026-06-16 18:49:27",
+          "document_count": 2
+        },
+        {
+          "id": 7,
+          "name": "test_users",
+          "description": null,
+          "created_at": "2026-06-16 19:58:47",
+          "document_count": 10
+        },
+        {
+          "id": 6,
+          "name": "x",
+          "description": null,
+          "created_at": "2026-06-16 18:58:24",
+          "document_count": 0
+        }
+      ]
     }
   },
   "admin_create-collection": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections",
-    "status_code": 401,
+    "status_code": 200,
     "method": "POST",
     "request_data": {
-      "name": "test_products_142040879"
+      "name": "test_products_142319945"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "collection": {
+        "name": "test_products_142319945"
       }
     }
   },
   "admin_get-collection": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142040879",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142319945",
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "items": []
     }
   },
   "admin_create-document": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142040879/documents",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142319945/documents",
+    "status_code": 201,
     "method": "POST",
     "request_data": {
       "title": "Widget"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "id": "35"
     }
   },
   "admin_copy-collection": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142040879/copy",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142319945/copy",
+    "status_code": 200,
     "method": "POST",
     "request_data": {
-      "new_name": "test_products_142040879_backup"
+      "new_name": "test_products_142319945_backup"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "sourceName": "test_products_142319945",
+      "newName": "test_products_142319945_backup",
+      "documentsCopied": 1
     }
   },
   "admin_rename-collection": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142040879",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142319945",
+    "status_code": 200,
     "method": "PATCH",
     "request_data": {
-      "name": "test_products_142040879_renamed"
+      "name": "test_products_142319945_renamed"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "oldName": "test_products_142319945",
+      "newName": "test_products_142319945_renamed"
     }
   },
   "admin_delete-collection-renamed": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142040879_renamed",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142319945_renamed",
+    "status_code": 200,
     "method": "DELETE",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true
     }
   },
   "admin_delete-collection-backup": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142040879_backup",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/collections/test_products_142319945_backup",
+    "status_code": 200,
     "method": "DELETE",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true
     }
   },
   "main_list-documents": {
-    "url": "http://localhost/app-dashboard/apps/test9/collections/main_test_142040879/documents",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/collections/main_test_142319945/documents",
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "documents": []
     }
   },
   "main_create-document": {
-    "url": "http://localhost/app-dashboard/apps/test9/collections/main_test_142040879/documents",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/collections/main_test_142319945/documents",
+    "status_code": 201,
     "method": "POST",
     "request_data": {
       "name": "John Doe"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "id": "37"
     }
   },
   "storage_upload-file": {
     "url": "http://localhost/app-dashboard/apps/test9/storage/upload",
-    "status_code": 401,
+    "status_code": 201,
     "method": "POST",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "id": 36,
+      "filename": "6a338ed89956f_16a6247ac4c6c50c.txt",
+      "folder_path": "",
+      "url": "/uploads/6a338ed89956f_16a6247ac4c6c50c.txt",
+      "size": 35,
+      "mime_type": ""
     }
   },
   "folders_list-folders": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders&parent_path=",
-    "status_code": 401,
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "folders": [
+        {
+          "id": 8,
+          "name": "111",
+          "path": "111/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 13:02:03"
+        },
+        {
+          "id": 3,
+          "name": "asd",
+          "path": "asd/",
+          "parent_path": "",
+          "created_by_key_id": null,
+          "created_at": "2026-06-14 08:36:42"
+        },
+        {
+          "id": 6,
+          "name": "fffff",
+          "path": "fffff/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 13:01:38"
+        },
+        {
+          "id": 16,
+          "name": "renamed_folder_201850 (copy 2)",
+          "path": "renamed_folder_201850 (copy 2)/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 20:18:50"
+        },
+        {
+          "id": 18,
+          "name": "renamed_folder_201928 (copy 2)",
+          "path": "renamed_folder_201928 (copy 2)/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 20:19:28"
+        },
+        {
+          "id": 20,
+          "name": "renamed_folder_202022 (copy 2)",
+          "path": "renamed_folder_202022 (copy 2)/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 20:20:22"
+        },
+        {
+          "id": 22,
+          "name": "renamed_folder_202211833 (copy 2)",
+          "path": "renamed_folder_202211833 (copy 2)/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 20:22:11"
+        },
+        {
+          "id": 12,
+          "name": "renamed_folder_api",
+          "path": "renamed_folder_api/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 19:58:47"
+        },
+        {
+          "id": 11,
+          "name": "sss",
+          "path": "sss/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 18:05:08"
+        },
+        {
+          "id": 14,
+          "name": "test_folder_api (copy 2)",
+          "path": "test_folder_api (copy 2)/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-16 20:14:41"
+        },
+        {
+          "id": 2,
+          "name": "test1",
+          "path": "test1/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-14 08:36:07"
+        },
+        {
+          "id": 1,
+          "name": "test123",
+          "path": "test123/",
+          "parent_path": "",
+          "created_by_key_id": 1,
+          "created_at": "2026-06-14 08:35:57"
+        }
+      ]
     }
   },
   "folders_create-folder": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders",
-    "status_code": 401,
+    "status_code": 201,
     "method": "POST",
     "request_data": {
-      "name": "test_folder_api_142040879"
+      "name": "test_folder_api_142319945"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "folder": {
+        "success": true,
+        "id": 29,
+        "name": "test_folder_api_142319945",
+        "path": "test_folder_api_142319945/",
+        "parent_path": ""
       }
     }
   },
   "folders_rename-folder": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/test_folder_api_142040879%2F",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/test_folder_api_142319945%2F",
+    "status_code": 200,
     "method": "PATCH",
     "request_data": {
-      "name": "renamed_142040879"
+      "name": "renamed_142319945"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "folder": {
+        "success": true,
+        "old_path": "test_folder_api_142319945/",
+        "new_path": "renamed_142319945/",
+        "name": "renamed_142319945"
       }
     }
   },
   "folders_move-folder": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/renamed_142040879%2F/move",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/renamed_142319945%2F/move",
+    "status_code": 200,
     "method": "POST",
     "request_data": {
-      "parent_path": "move_target_142040879/"
+      "parent_path": "move_target_142319945/"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "folder": {
+        "success": true,
+        "old_path": "renamed_142319945/",
+        "new_path": "move_target_142319945/renamed_142319945/",
+        "name": "renamed_142319945"
       }
     }
   },
   "folders_copy-folder": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/move_target_142040879%2Frenamed_142040879%2F/copy",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/move_target_142319945%2Frenamed_142319945%2F/copy",
+    "status_code": 200,
     "method": "POST",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "folder": {
+        "success": true,
+        "original_path": "move_target_142319945/renamed_142319945/",
+        "new_path": "renamed_142319945/",
+        "name": "renamed_142319945"
       }
     }
   },
   "folders_list-all-paths": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/all-paths",
-    "status_code": 401,
+    "status_code": 200,
     "method": "GET",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "folders": [
+        {
+          "path": "111/",
+          "name": "111",
+          "parent_path": ""
+        },
+        {
+          "path": "111/a/",
+          "name": "a",
+          "parent_path": "111/"
+        },
+        {
+          "path": "asd/",
+          "name": "asd",
+          "parent_path": ""
+        },
+        {
+          "path": "fffff/",
+          "name": "fffff",
+          "parent_path": ""
+        },
+        {
+          "path": "fffff/111/",
+          "name": "111",
+          "parent_path": "fffff/"
+        },
+        {
+          "path": "fffff/111/a/",
+          "name": "a",
+          "parent_path": "fffff/111/"
+        },
+        {
+          "path": "move_target_142319945/",
+          "name": "move_target_142319945",
+          "parent_path": ""
+        },
+        {
+          "path": "move_target_142319945/renamed_142319945/",
+          "name": "renamed_142319945",
+          "parent_path": "move_target_142319945/"
+        },
+        {
+          "path": "renamed_142319945/",
+          "name": "renamed_142319945",
+          "parent_path": ""
+        },
+        {
+          "path": "renamed_folder_201850 (copy 2)/",
+          "name": "renamed_folder_201850 (copy 2)",
+          "parent_path": ""
+        },
+        {
+          "path": "renamed_folder_201928 (copy 2)/",
+          "name": "renamed_folder_201928 (copy 2)",
+          "parent_path": ""
+        },
+        {
+          "path": "renamed_folder_202022 (copy 2)/",
+          "name": "renamed_folder_202022 (copy 2)",
+          "parent_path": ""
+        },
+        {
+          "path": "renamed_folder_202211833 (copy 2)/",
+          "name": "renamed_folder_202211833 (copy 2)",
+          "parent_path": ""
+        },
+        {
+          "path": "renamed_folder_api/",
+          "name": "renamed_folder_api",
+          "parent_path": ""
+        },
+        {
+          "path": "sss/",
+          "name": "sss",
+          "parent_path": ""
+        },
+        {
+          "path": "test_folder_api (copy 2)/",
+          "name": "test_folder_api (copy 2)",
+          "parent_path": ""
+        },
+        {
+          "path": "test1/",
+          "name": "test1",
+          "parent_path": ""
+        },
+        {
+          "path": "test123/",
+          "name": "test123",
+          "parent_path": ""
+        }
+      ]
     }
   },
   "folders_delete-moved-folder": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/move_target_142040879%2Frenamed_142040879%2F",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/move_target_142319945%2Frenamed_142319945%2F",
+    "status_code": 200,
     "method": "DELETE",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true
     }
   },
   "folders_delete-copied-folder": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/renamed_142040879%2F",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/renamed_142319945%2F",
+    "status_code": 200,
     "method": "DELETE",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true
     }
   },
   "folders_delete-parent-folder": {
-    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/move_target_142040879%2F",
-    "status_code": 401,
+    "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/folders/move_target_142319945%2F",
+    "status_code": 200,
     "method": "DELETE",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true
     }
   },
   "admin-storage_upload-file": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/storage/upload",
-    "status_code": 401,
+    "status_code": 200,
     "method": "POST",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "id": 37,
+      "filename": "admin_test/6a338ed90f67e_56f3cf41279830d2.txt",
+      "folder_path": "admin_test/",
+      "url": "/uploads/admin_test/6a338ed90f67e_56f3cf41279830d2.txt"
     }
   },
   "notifications_list-notifications": {
@@ -443,43 +913,39 @@
   },
   "notifications_send-notification": {
     "url": "http://localhost/app-dashboard/apps/test9/notifications",
-    "status_code": 401,
+    "status_code": 201,
     "method": "POST",
     "request_data": {
       "message": "Test notification!"
     },
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
-      }
+      "success": true,
+      "id": 9
     }
   },
   "access_create-limited-key": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/api-keys",
-    "status_code": 401,
+    "status_code": 201,
     "method": "POST",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "Invalid API key"
+      "success": true,
+      "key": {
+        "id": 25,
+        "key": "1c7b01a75768c7f8b02cfa5fc654c4f7b4754265da7f0f4532524c41d659ab66",
+        "key_hash": "b4d380ae3febe70bcecbc2262f09bd50d8728cf5a7a5f5a56adf08b91ce434b8",
+        "is_admin": false,
+        "created_at": "2026-06-18 06:23:21"
       }
     }
   },
   "admin_logout": {
     "url": "http://localhost/app-dashboard/apps/test9/admin/api.php?route=/logout",
-    "status_code": 401,
+    "status_code": 200,
     "method": "POST",
     "request_data": null,
     "response": {
-      "success": false,
-      "error": {
-        "code": "UNAUTHORIZED",
-        "message": "API key required"
-      }
+      "success": true
     }
   }
 }
