@@ -20,10 +20,8 @@ return [
     'max_file_size_bytes' => 104857600, // 100MB in bytes
     
     // File type restrictions
-    'allowed_extensions' => [
-        'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg',
-        'pdf', 'doc', 'docx', 'txt', 'csv', 'zip', 'rar', 'tar', 'gz'
-    ],
+    // Empty array = all file types allowed (except blocked_extensions)
+    'allowed_extensions' => [],
     
     'blocked_extensions' => [
         'exe', 'bat', 'sh', 'cmd', 'ps1', 'vbs', 
