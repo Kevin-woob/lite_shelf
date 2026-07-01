@@ -25,6 +25,7 @@ from pathlib import Path
 DASHBOARD_BASE = "http://localhost/app-dashboard/dashboard/api.php"
 DASHBOARD_USERNAME = "admin"
 DASHBOARD_PASSWORD = "admin123"
+APPS_BASE_URL = None  # derived from DASHBOARD_BASE if None
 TEST_SCRIPT = Path(__file__).parent.parent / "apps" / "test9" / "test_api.py"
 
 PASSED = 0
@@ -55,6 +56,22 @@ def print_fail(detail: str = ""):
     print(f"\033[91mFAIL\033[0m - {detail}")
 
 
+def safe_json(resp):
+    """Safely parse JSON from response, handling PHP warnings in body."""
+    try:
+        return resp.json()
+    except Exception:
+        text = resp.text
+        idx = text.find('{')
+        if idx != -1:
+            try:
+                import json
+                return json.loads(text[idx:])
+            except Exception:
+                pass
+        return {}
+
+
 # ==================== DASHBOARD API HELPERS ====================
 
 def dashboard_login(session: requests.Session) -> bool:
@@ -63,9 +80,9 @@ def dashboard_login(session: requests.Session) -> bool:
     resp = session.post(
         DASHBOARD_BASE,
         params={"action": "login"},
-        json={"username": DASHBOARD_USERNAME, "password": DASHBOARD_PASSWORD}
+        data={"username": DASHBOARD_USERNAME, "password": DASHBOARD_PASSWORD}
     )
-    data = resp.json()
+    data = safe_json(resp)
     if data.get("success"):
         print_ok("Authenticated")
         return True
@@ -84,10 +101,15 @@ def dashboard_create_app(session: requests.Session, app_name: str) -> dict | Non
             "config": {"description": f"Auto-created for test suite run at {time.strftime('%H:%M:%S')}"}
         }
     )
-    data = resp.json()
+    data = safe_json(resp)
     if data.get("success"):
         app = data["data"]
-        print_ok(f"App created with id={app['id']}, status={app['status']}")
+        provision_error = data.get("meta", {}).get("provision_error", "")
+        if provision_error:
+            print_fail(f"App created but provisioning failed: {provision_error}")
+            print(f"        App id={app['id']}, status={app['status']}")
+        else:
+            print_ok(f"App created with id={app['id']}, status={app['status']}")
         return app
     print_fail(data.get("error", {}).get("message", "Unknown error"))
     return None
@@ -100,7 +122,7 @@ def dashboard_get_app(session: requests.Session, app_id: int) -> dict | None:
         DASHBOARD_BASE,
         params={"action": "get", "id": app_id}
     )
-    data = resp.json()
+    data = safe_json(resp)
     if data.get("success"):
         app = data["data"]
         print_ok(f"App: {app['name']}, status={app['status']}, folder={app['folder_path']}")
@@ -116,7 +138,7 @@ def dashboard_list_apps(session: requests.Session) -> list:
         DASHBOARD_BASE,
         params={"action": "list"}
     )
-    data = resp.json()
+    data = safe_json(resp)
     if data.get("success"):
         apps = data["data"]
         print_ok(f"Total apps: {len(apps)}")
@@ -134,7 +156,7 @@ def dashboard_delete_app(session: requests.Session, app_id: int) -> bool:
         DASHBOARD_BASE,
         params={"action": "delete", "id": app_id}
     )
-    data = resp.json()
+    data = safe_json(resp)
     if data.get("success"):
         print_ok("App deleted")
         return True
@@ -149,7 +171,7 @@ def dashboard_get_stats(session: requests.Session) -> dict | None:
         DASHBOARD_BASE,
         params={"action": "stats"}
     )
-    data = resp.json()
+    data = safe_json(resp)
     if data.get("success"):
         stats = data["data"]
         print_ok(f"Total={stats['total_apps']}, Active={stats['active_apps']}, "
@@ -169,7 +191,8 @@ def run_test_script(app: dict) -> int:
     app_name = app["name"]
     folder_path = app["folder_path"]
     api_key = app["api_key"]
-    app_base_url = f"http://localhost/app-dashboard/apps/{folder_path}"
+    apps_base = APPS_BASE_URL or f"http://localhost/app-dashboard/apps/"
+    app_base_url = f"{apps_base}{folder_path}"
 
     print_header(f"Running Test Suite Against New App")
     print(f"  App name:     {app_name}")
@@ -239,14 +262,26 @@ def run_test_script(app: dict) -> int:
 # ==================== MAIN ====================
 
 def main():
-    global PASSED, FAILED
+    global PASSED, FAILED, DASHBOARD_BASE, DASHBOARD_USERNAME, DASHBOARD_PASSWORD, APPS_BASE_URL
 
     parser = argparse.ArgumentParser(description="Create a new app via dashboard and run its test suite")
     parser.add_argument("--name", type=str, default=None,
                         help="App name to create (default: auto-generated with timestamp)")
     parser.add_argument("--cleanup", action="store_true",
                         help="Delete the app after tests complete")
+    parser.add_argument("--skip-tests", action="store_true",
+                        help="Skip running the app test suite (only create + verify)")
+    parser.add_argument("--url", default=DASHBOARD_BASE, help="Dashboard API URL")
+    parser.add_argument("--apps-url", default=None, help="Apps base URL (dir)")
+    parser.add_argument("--user", default=DASHBOARD_USERNAME, help="Admin username")
+    parser.add_argument("--pass", dest="password", default=DASHBOARD_PASSWORD, help="Admin password")
     args = parser.parse_args()
+
+    DASHBOARD_BASE = args.url
+    DASHBOARD_USERNAME = args.user
+    DASHBOARD_PASSWORD = args.password
+    if args.apps_url:
+        APPS_BASE_URL = args.apps_url
 
     # Generate unique app name
     if args.name:
@@ -259,8 +294,15 @@ def main():
     print(f"  Dashboard URL:  {DASHBOARD_BASE}")
     print(f"  App name:       {app_name}")
     print(f"  Cleanup after:  {'Yes' if args.cleanup else 'No'}")
+    print(f"  Skip tests:     {'Yes' if args.skip_tests else 'No'}")
 
     session = requests.Session()
+    # Mod_Security on remote servers blocks Python's default UA; mimic browser
+    session.headers.update({
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36',
+        'Accept': 'application/json, text/javascript, */*; q=0.01',
+        'X-Requested-With': 'XMLHttpRequest',
+    })
 
     # Step 1: Login
     print_header("Step 1: Authentication")
@@ -292,9 +334,13 @@ def main():
     print_header("Step 5: List All Apps (Verification)")
     dashboard_list_apps(session)
 
-    # Step 6: Run test suite
-    print_header("Step 6: Run App Test Suite")
-    test_exit_code = run_test_script(app)
+    # Step 6: Run test suite (optional)
+    test_exit_code = 0
+    if not args.skip_tests:
+        print_header("Step 6: Run App Test Suite")
+        test_exit_code = run_test_script(app)
+    else:
+        print_header("Step 6: Run App Test Suite (SKIPPED)")
 
     # Step 7: Cleanup (optional)
     if args.cleanup:

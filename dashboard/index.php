@@ -918,7 +918,11 @@ if (!isset($_SESSION['dashboard_logged_in']) || $_SESSION['dashboard_logged_in']
 
                 if (result.success) {
                     closeModal('createModal');
-                    showToast('Application created successfully', 'success');
+                    if (result.meta && result.meta.provision_error) {
+                        showToast('App created but provisioning failed: ' + result.meta.provision_error, 'error');
+                    } else {
+                        showToast('Application created successfully', 'success');
+                    }
                     await loadApps();
                 } else {
                     showToast(getErrorMessage(result), 'error');

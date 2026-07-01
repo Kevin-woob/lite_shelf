@@ -10,6 +10,7 @@ class AppManager {
     private Database $db;
     private string $templatePath;
     private string $appsPath;
+    public string $lastProvisionError = '';
     
     public function __construct() {
         $this->db = Database::getInstance();
@@ -77,7 +78,9 @@ class AppManager {
         // Generate unique values
         $apiKey = $this->generateApiKey();
         // All apps share the same database; isolation is via table prefix
-        $sharedDatabase = 'lite_shelf';
+        // Read the actual database name from the dashboard's config (written by setup.php)
+        $tplConfig = require $this->templatePath . 'config/database.php';
+        $sharedDatabase = $tplConfig['database'];
         $tablePrefix = $folderName . '_';
 
         // Update config files in the new app
@@ -85,6 +88,7 @@ class AppManager {
         
         // Create database tables and seed admin API key
         $appStatus = 'active';
+        $provisionError = '';
         try {
             $appDbConfigPath = $folderPath . '/config/database.php';
             if (file_exists($appDbConfigPath)) {
@@ -111,6 +115,7 @@ class AppManager {
         } catch (\Throwable $e) {
             error_log('Failed to provision app "' . $name . '": ' . $e->getMessage());
             $appStatus = 'error';
+            $provisionError = $e->getMessage();
         }
         
         // Insert into database (database_name stores the table prefix for reference)
@@ -123,7 +128,14 @@ class AppManager {
             'config' => !empty($config) ? json_encode($config) : null,
         ];
         
-        return $this->db->insert('apps', $data);
+        $id = $this->db->insert('apps', $data);
+        
+        // Store the provision error so the caller can surface it
+        if ($provisionError !== '') {
+            $this->lastProvisionError = $provisionError;
+        }
+        
+        return $id;
     }
     
     /**

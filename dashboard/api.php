@@ -83,7 +83,12 @@ function handleCreate(): void {
             $app['config'] = json_decode($app['config'], true);
         }
         
-        Response::success($app, ['message' => 'App created successfully'], 201);
+        $meta = ['message' => 'App created successfully'];
+        if ($manager->lastProvisionError !== '') {
+            $meta['provision_error'] = $manager->lastProvisionError;
+        }
+        
+        Response::success($app, $meta, 201);
     } catch (InvalidArgumentException $e) {
         Response::badRequest($e->getMessage());
     } catch (PDOException $e) {

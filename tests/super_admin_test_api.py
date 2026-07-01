@@ -1,11 +1,18 @@
 """
 Lite_Shelf - Full Functionality Test
 Tests ALL dashboard features: login, create, view, configure, toggle status, launch, delete, logout
+
+Usage:
+  python super_admin_test_api.py                    # localhost defaults
+  python super_admin_test_api.py --url https://host/path/dashboard/api.php \
+      --dash-url https://host/path/dashboard/ --apps-url https://host/path/apps/ \
+      --user lite_root --pass 'Secret!'
 """
 
 import requests
 import json
 import sys
+import argparse
 from datetime import datetime
 
 BASE_URL = "http://localhost/app-dashboard/dashboard/api.php"
@@ -149,7 +156,12 @@ def test_create_app(report):
     data = safe_json(resp)
     success = resp.status_code == 201 and data.get("success") == True
     app_id = data.get("data", {}).get("id") if success else None
-    report.log("Create new app 'test-app-final'", success, f"ID={app_id}", resp)
+    app_status = data.get("data", {}).get("status") if success else None
+    provision_error = data.get("meta", {}).get("provision_error", "")
+    detail = f"ID={app_id}, status={app_status}"
+    if provision_error:
+        detail += f" | PROVISION_ERROR: {provision_error}"
+    report.log("Create new app 'test-app-final'", success, detail, resp)
     return app_id
 
 def test_create_app_no_config(report):
@@ -157,7 +169,12 @@ def test_create_app_no_config(report):
     data = safe_json(resp)
     success = resp.status_code == 201 and data.get("success") == True
     app_id = data.get("data", {}).get("id") if success else None
-    report.log("Create app without config", success, f"ID={app_id}", resp)
+    app_status = data.get("data", {}).get("status") if success else None
+    provision_error = data.get("meta", {}).get("provision_error", "")
+    detail = f"ID={app_id}, status={app_status}"
+    if provision_error:
+        detail += f" | PROVISION_ERROR: {provision_error}"
+    report.log("Create app without config", success, detail, resp)
     return app_id
 
 def test_create_duplicate(report):
@@ -398,6 +415,28 @@ def test_unauthorized_after_logout(report):
 
 
 def main():
+    global BASE_URL, BASE_DASH, BASE_APPS, CREDENTIALS
+
+    parser = argparse.ArgumentParser(description="Lite_Shelf full functionality test")
+    parser.add_argument("--url", default=BASE_URL, help="Dashboard API URL")
+    parser.add_argument("--dash-url", default=None, help="Dashboard base URL (dir)")
+    parser.add_argument("--apps-url", default=None, help="Apps base URL (dir)")
+    parser.add_argument("--user", default=CREDENTIALS["username"], help="Admin username")
+    parser.add_argument("--pass", dest="password", default=CREDENTIALS["password"], help="Admin password")
+    args = parser.parse_args()
+
+    BASE_URL = args.url
+    # Derive dash/apps URLs from --url if not given explicitly
+    if args.dash_url:
+        BASE_DASH = args.dash_url
+    else:
+        BASE_DASH = BASE_URL.rsplit("/api.php", 1)[0] + "/"
+    if args.apps_url:
+        BASE_APPS = args.apps_url
+    else:
+        BASE_APPS = BASE_DASH.rsplit("/dashboard/", 1)[0] + "/apps/"
+    CREDENTIALS = {"username": args.user, "password": args.password}
+
     print("=" * 60)
     print("LITE_SHELF - FULL FUNCTIONALITY TEST")
     print(f"  API:    {BASE_URL}")

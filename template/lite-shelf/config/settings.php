@@ -24,8 +24,8 @@ return [
     'allowed_extensions' => [],
     
     'blocked_extensions' => [
-        'exe', 'bat', 'sh', 'cmd', 'ps1', 'vbs', 
-        'js', 'php', 'phtml', 'pl', 'py', 'rb'
+        'exe', 'bat', 'sh', 'cmd', 'ps1', 'vbs',
+        'php', 'phtml', 'pl', 'py', 'rb'
     ],
     
     // Function execution

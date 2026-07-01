@@ -37,8 +37,8 @@ if ($scriptDir !== '/' && $scriptDir !== '\\') {
     $path = preg_replace('#^' . preg_quote($scriptDir, '#') . '#', '', $path);
 }
 
-// Remove trailing script filename if present (e.g., /index.php)
-$path = preg_replace('#/index\.php$#', '', $path);
+// Remove index.php from the path (handles /index.php, /index.php/route, etc.)
+$path = preg_replace('#^/index\.php#', '', $path);
 
 // Remove leading slash for matching
 $path = ltrim($path, '/');
@@ -149,6 +149,8 @@ try {
         handleGetFile($matches[1]);
     } elseif (preg_match('#^storage/files/([^/]+)$#', $path, $matches) && $method === 'DELETE') {
         handleDeleteFile($matches[1]);
+    } elseif (preg_match('#^storage/serve/(.+)$#', $path, $matches) && $method === 'GET') {
+        handleServeFile($matches[1]);
 
     } else {
         Response::notFound('Endpoint not found: ' . $path);
@@ -291,13 +293,50 @@ function handleUpload(): void {
 function handleGetFile(string $filename): void {
     $storage = new StorageManager();
     $content = $storage->getFile($filename);
-    
+
     if ($content !== null && $content !== false) {
         header('Content-Type: application/octet-stream');
         echo $content;
     } else {
         Response::notFound('File not found');
     }
+}
+
+/**
+ * Serve a file inline with its real MIME type (for images, CSS, JS, HTML, etc.)
+ */
+function handleServeFile(string $storedName): void {
+    $db = Database::getInstance();
+    $file = $db->fetchOne(
+        "SELECT filename_stored, filename_original, mime_type FROM storage_files WHERE filename_stored = ?",
+        [$storedName]
+    );
+
+    if (!$file) {
+        Response::notFound('File not found');
+        return;
+    }
+
+    $config = require __DIR__ . '/config/settings.php';
+    $filePath = $config['uploads_base_path'] . $file['filename_stored'];
+
+    if (!file_exists($filePath) || !is_readable($filePath)) {
+        Response::notFound('File not found on disk');
+        return;
+    }
+
+    $mime = $file['mime_type'];
+    if (!$mime) {
+        $mime = function_exists('mime_content_type') ? mime_content_type($filePath) : 'application/octet-stream';
+    }
+
+    header('Content-Type: ' . $mime);
+    header('Content-Disposition: inline; filename="' . basename($file['filename_original']) . '"');
+    header('Content-Length: ' . filesize($filePath));
+    header('Cache-Control: public, max-age=3600');
+    header('X-Content-Type-Options: nosniff');
+    readfile($filePath);
+    exit;
 }
 
 /**
